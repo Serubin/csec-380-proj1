@@ -8,21 +8,27 @@ matrix:
       script:
         - echo "Python!"
     - language: java
+      java:
+        - 1.9
       script:
-          echo: "Java!"
+        - echo "Java!"
 
 
     - language: ruby
       rvm:
-       - 2.2
-       - jruby
-       - rbx-3
+       - 2.5
+      script:
+        - echo "Ruby!"
 
     - language: node_js
       node_js:
         - "10"
+      script:
+        - echo "Node!"
 
     - language: php
       php:
         - '7.0'
+      script:
+        - echo "Php!"
 
