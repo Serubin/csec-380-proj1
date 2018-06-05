@@ -1,0 +1,21 @@
+@startuml
+alt User has account
+	Bob -> nginx : sends login request
+	nginx -> ELK : log request
+	nginx -> DB : checks username exists
+	alt username exists
+		DB -> nginx : inform of username id
+		nginx -> auth : send login request
+		alt  authorized
+			auth -> nginx : session create for Bob
+			nginx -> DB : record session data
+			nginx -> Bob : init session w/ Bob
+			Bob -> nginx : join session
+			nginx -> ELK : log session creation
+		else authorization error
+			auth -> nginx : authorization failure
+			nginx -> ELK : log error
+			nginx -> Bob : Login Error
+	else username not exits
+else Create account
+@enduml
