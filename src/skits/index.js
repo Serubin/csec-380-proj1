@@ -22,7 +22,31 @@ app.get('/', (req, res) => {
     res.sendFile('static/index.html');
 })
 
+/**
+ * Get's all skits
+ */
+app.get('/getskits', (req, res) => {
+
+    els.search({
+        index: INDEX,
+        type: TYPE
+    }).then((resp) => {
+        const hits = [];
+
+        for (hit of resp.hits.hits)
+            hits.push({id: hit._id, ...hit._source});
+
+        res.send({result: 200, total: resp.hits.total, data: hits });
+    }).catch((err) => res.status(500).send( {error: err} ));
+
+});
+
+/**
+ * Add new skit
+ * @param skit - skit content (max char 140)
+ */
 app.post('/addskit', (req, res) => {
+
     if(!req.body.skit)
         return res.status(400).send({ error: "missing parameter: skit"});
 
@@ -44,6 +68,10 @@ app.post('/addskit', (req, res) => {
 
 });
 
+/**
+ * Remove skit by id
+ * @param id - skit id
+ */
 app.delete('/removeskit', (req, res) => {
     if(!req.body.id)
         return res.status(400).send({ error: "missing parameter: id"});
