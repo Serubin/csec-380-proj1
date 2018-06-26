@@ -6,14 +6,32 @@ const multer = require('multer'); // v1.0.5
 const upload = multer(); // for parsing multipart/form-data
 
 const app = express();
-const els = new elasticsearch.Client({
-    host: 'localhost:9200',
-    requestTimeout: Infinity,
-    keepAlive: true
-});
+let els = null; // Populate on ping
 
 const INDEX = 'skit';
 const TYPE = 'skitdata';
+
+/**
+ * Dynamic elastic search connection
+ */
+function createElasticConnection () {
+    console.log("Attempting connection")
+    els = new elasticsearch.Client({
+        host: 'elk:9200',
+        requestTimeout: Infinity,
+        keepAlive: true
+    });
+
+    els.ping({
+        requestTimeout: 2500,
+    }, (error) => {
+        console.log("Attempting connection to elastic search failed, retrying")
+        if (error)
+            setTimeout(createElasticConnection, 2500)
+    });
+
+}
+createElasticConnection();
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -86,4 +104,4 @@ app.delete('/removeskit', (req, res) => {
 
 });
 
-app.listen(3000, () => console.log("Starting"))
+app.listen(3000, () => console.log("Starting server on port 3000"))
