@@ -3,6 +3,8 @@ version: '3.3'
 networks:
   datanet:
     external: true # Temporaryily external
+  skitnet:
+    external: true # Temporaryily external
 
 services:
   mariadb:
@@ -22,4 +24,14 @@ services:
       - "9200:9200"
       - "5044:5044"
     networks:
+      - datanet
+  skits:
+    image: skit-node
+    build:
+      dockerfile: Dockerfile
+      context: skits/
+    ports:
+       - 3000:3000
+    networks:
+      - skitnet
       - datanet
