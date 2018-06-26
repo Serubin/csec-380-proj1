@@ -44,4 +44,18 @@ app.post('/addskit', (req, res) => {
 
 });
 
+app.delete('/removeskit', (req, res) => {
+    if(!req.body.id)
+        return res.status(400).send({ error: "missing parameter: id"});
+
+    els.delete({
+        index: INDEX,
+        type: TYPE,
+        id: req.body.id
+    }).then((resp) => {
+        res.send({result: 204, id: req.body.id})
+    }).catch((err) => res.status(500).send( {error: err} ));
+
+});
+
 app.listen(3000, () => console.log("Starting"))
