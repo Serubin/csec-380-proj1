@@ -13,6 +13,11 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: default
+    volumes:
+      - "./db/mariadb/data:/var/lib/mysql"
+      - "./db/mariadb/schema.sql:/docker-entrypoint-initdb.d/schema.sql"
+    ports:
+      - "3306:3306"
     networks:
       - datanet
   elk:
