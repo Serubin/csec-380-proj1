@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Testing the Authenticator</title>
+
+</head>
+<body>
+	<h1 id="out">Did it work</h1>
+	<script type="text/javascript">
+var req = new XMLHttpRequest();
+req.open("GET", "http:///Authenticate");
+document.getElementById("out").innerHTML = req.responseText;
+</script>
+</body>
+</html>
