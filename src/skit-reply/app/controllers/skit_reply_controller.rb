@@ -31,7 +31,7 @@ class SkitReplyController < ApplicationController
     end
 
     def remreply
-        client = Elasticsearch::Client.new log: true, host: 'localhost', port: 9200
+        client = Elasticsearch::Client.new log: true, host: 'elk', port: 9200
 
         if !params['id']
             render json: {error: 'no skit id provided' }, status: :bad_request
@@ -43,7 +43,7 @@ class SkitReplyController < ApplicationController
     end
 
     def getreply
-        client = Elasticsearch::Client.new log: true, host: 'localhost', port: 9200
+        client = Elasticsearch::Client.new log: true, host: 'elk', port: 9200
 
         if !params['id']
             render json: {error: 'no skit id provided' }, status: :bad_request
