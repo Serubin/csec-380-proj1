@@ -5,6 +5,8 @@ networks:
     external: true # Temporaryily external
   skitnet:
     external: true # Temporaryily external
+  replynet:
+    external: true # Temporaryily external
 
 services:
   mariadb:
@@ -39,4 +41,14 @@ services:
        - 7000:7000
     networks:
       - skitnet
+      - datanet
+  skit-reply:
+    image: skit-reply
+    build:
+      dockerfile: Dockerfile
+      context: skit-reply
+    ports:
+       - 9000:9000
+    networks:
+      - replynet
       - datanet
