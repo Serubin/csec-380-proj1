@@ -8,8 +8,8 @@ const upload = multer(); // for parsing multipart/form-data
 const app = express();
 let els = null; // Populate on ping
 
-const INDEX = 'skit';
-const TYPE = 'skitdata';
+const INDEX = 'skitdata';
+const TYPE = 'skit';
 
 /**
  * Dynamic elastic search connection
@@ -78,6 +78,7 @@ app.post('/addskit', (req, res) => {
         body: {
             user: 0,
             content: req.body.skit,
+            replies: [],
             timestamp: new Date().toJSON()
         }
     }).then((resp) => {
@@ -104,4 +105,4 @@ app.delete('/removeskit', (req, res) => {
 
 });
 
-app.listen(3000, () => console.log("Starting server on port 3000"))
+app.listen(7000, () => console.log("Starting server on port 3000"))
