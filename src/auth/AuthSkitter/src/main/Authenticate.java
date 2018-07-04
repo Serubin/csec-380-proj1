@@ -1,7 +1,22 @@
 package main;
 
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/Authenticate")
 public class Authenticate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	static boolean hasCert = false;
 
     /**
      * Default constructor. 
@@ -27,7 +43,7 @@ public class Authenticate extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 	/**
@@ -35,7 +51,67 @@ public class Authenticate extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+		response.setContentType("text/plain");
+		TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }
+		};
+		// Install the all-trusting trust manager
+        SSLContext sc;
+		sc = null;
+			try {
+				sc = SSLContext.getInstance("SSL");
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			} catch (KeyManagementException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 
+        
+ 
+        // Create all-trusting host name verifier
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+        SSLSocketFactory bad = sc.getSocketFactory();
+        HttpsURLConnection.setDefaultSSLSocketFactory(bad);
+		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		URL chaimsLogin = new URL("https://csec380-core.csec.rit.edu/login.php");
+		HttpsURLConnection myConnection = (HttpsURLConnection) chaimsLogin.openConnection();
+		myConnection.setRequestMethod("POST");
+		String urlEncParams = "username="+request.getParameter("username")+"&password="+request.getParameter("password");
+		myConnection.setDoOutput(true);
+		DataOutputStream out = new DataOutputStream(myConnection.getOutputStream());
+		out.writeBytes(urlEncParams);
+		out.flush();
+		out.close();
+		BufferedReader buffy = new BufferedReader(new InputStreamReader(myConnection.getInputStream()));
+		StringBuffer input = new StringBuffer();
+		String nextLine = "";
+		while ((nextLine = buffy.readLine()) != null) {
+			input.append(nextLine);
+		}
+		buffy.close();
+		if(input.toString().startsWith("[true,\"")) {
+			response.getWriter().append("User Authenticated");
+		}
+		else {
+			return;
+		}
+		response.setStatus(myConnection.getResponseCode());
+		}
 
 }
