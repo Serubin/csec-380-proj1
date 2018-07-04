@@ -14,7 +14,7 @@ COPY . /srv/node-skit
 RUN chown -R node:node .
 USER node
 
-EXPOSE 3000
+EXPOSE 7000
 
 
 CMD [ "npm", "run", "start" ]
