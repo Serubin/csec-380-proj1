@@ -63,7 +63,7 @@ public class Authenticated extends HttpServlet {
 		sqlStr.put("password", "default");
 		try {
 			Connection conn = DriverManager.getConnection(sqlUrl, sqlStr);
-			PreparedStatement ps = conn.prepareStatement(String.format("Select *  from sessions where session_id=%s AND ip = %s AND 0 >  (expiration - now()) ;", id));
+			PreparedStatement ps = conn.prepareStatement(String.format("Select *  from sessions where session_id=%s AND ip = %s AND 0 >  (expiration - now()) ;", id, request.getRemoteAddr()));
 			ResultSet rs = ps.executeQuery();
 			Boolean authenticated = rs.first();
 			String uid = rs.getString("user_id");
