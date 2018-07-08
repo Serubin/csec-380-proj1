@@ -66,11 +66,19 @@ public class Authenticated extends HttpServlet {
 			PreparedStatement ps = conn.prepareStatement(String.format("Select *  from sessions where session_id=%s AND ip = %s AND 0 >  (expiration - now()) ;", id, request.getRemoteAddr()));
 			ResultSet rs = ps.executeQuery();
 			Boolean authenticated = rs.first();
+			if(authenticated) {
 			String uid = rs.getString("user_id");
 			response.setContentType("application/JSON");
 			response.getWriter().append("{"+ "id:"+uid +","
 					+"authenticated:" + authenticated.toString()
 		    		+"}");
+			}
+			else {
+				response.getWriter().append("{"
+						+"authenticated:" + authenticated.toString()
+			    		+"}");
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
