@@ -9,6 +9,14 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.Properties;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -22,6 +30,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+//import Json;
 
 /**
  * Servlet implementation class Authenticate
@@ -105,9 +114,42 @@ public class Authenticate extends HttpServlet {
             input.append(nextLine);
         }
         buffy.close();
+        
         // TODO use JSON module and verify authenciation
         if(input.toString().startsWith("[true,\"")) {
-            response.getWriter().append("User Authenticated");
+        	String token = input.toString().split(",")[1];
+        	token = token.replaceAll("\"", "");
+        	String sqlUrl = "jdbc:mysql://mariadb:3306/accounts";
+    		Properties sqlStr = new Properties();
+    		sqlStr.put("user", "root");
+    		sqlStr.put("password", "default");
+    		try {
+    			Connection conn = DriverManager.getConnection(sqlUrl, sqlStr);
+    			String usr = request.getParameter("username");
+    			PreparedStatement ps = conn.prepareStatement(String.format("Select username, id  from users where username=%s;", usr),Statement.RETURN_GENERATED_KEYS);
+    			ResultSet rs = ps.executeQuery();
+    			int id;
+    			
+    			if (!rs.first()){//check to see if user exists
+    				PreparedStatement ps2 = conn.prepareStatement(String.format("INSERT INTO (username, name, email) VALUES (%s,%s,%s@rit.edu);"
+    						+ "username, id  from users where username=%s;", usr, usr, usr),Statement.RETURN_GENERATED_KEYS);
+    				rs = ps2.executeQuery();
+    			}
+    			id = rs.getInt("id");
+    			ps = conn.prepareStatement(String.format("INSERT INTO sessions"
+    					+ " (userid, session_id,  expiration, ip)"
+    					+ " VALUES (%d, %s, SELECT date_add(now(), INTERVAL 2 DAY), %s);"
+    					, id, token,request.getRemoteAddr()));
+    			rs = ps.executeQuery();
+    			Timestamp exp = rs.getTimestamp("expiration");
+    			response.setContentType("application/JSON");
+    			response.getWriter().append("{"+ "expiration:"+exp.toString() +","
+    					+"token:" + token + ",id:" + Integer.toString(id)
+    		    		+"}");
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+            
             // TODO if authenicated: verify if user is in database
             // IF NOT: Add user to database using username
             //
@@ -123,8 +165,8 @@ public class Authenticate extends HttpServlet {
         }
 
 }
-
 // ENDPOINT: isAuthenicated
+
 // TODO IsAuthenicated
 // IsAuthenticated should take a param of the session id
 // This should verify if a matching sessions exists and is valid by:
