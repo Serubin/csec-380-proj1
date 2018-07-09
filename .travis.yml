@@ -27,7 +27,8 @@ matrix:
       node_js:
         - "10"
       script:
-        - echo "Node!"
+        - ls
+        - cd src/skits/ && npm run tests
 
     - language: php
       php:

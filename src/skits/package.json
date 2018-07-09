@@ -4,7 +4,7 @@
   "description": "Add, Remove, and View skits",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -R spec spec/spec.js --exit",
     "start": "node index.js"
   },
   "dependencies": {
@@ -13,7 +13,10 @@
     "express": "^4.16.3",
     "multer": "^1.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "supertest": "^3.1.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Serubin/csec-380-proj1.git"
