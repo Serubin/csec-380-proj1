@@ -7,6 +7,10 @@ networks:
     external: true # Temporaryily external
   replynet:
     external: true # Temporaryily external
+  authnet:
+    external: true # Temporaryily external
+  sitenet:
+    external: true # Temporaryily external
 
 services:
   mariadb:
@@ -32,8 +36,26 @@ services:
       - "5044:5044"
     networks:
       - datanet
+  auth:
+    image: skitter/auth:0.0.1
+    build:
+      dockerfile: Dockerfile
+      context: auth/
+    ports:
+      - 4000:4000
+    networks:
+      - datanet
+      - authnet
+  site:
+    image: nginx
+    volumes:
+        - ./site:/usr/share/nginx/html
+    ports:
+     - "6001:80"
+    networks:
+      - sitenet
   skits:
-    image: skit-node
+    image: skitter/skits:0.0.1
     build:
       dockerfile: Dockerfile
       context: skits/
@@ -43,7 +65,7 @@ services:
       - skitnet
       - datanet
   skit-reply:
-    image: skit-reply
+    image: skitter/reply:0.0.1
     build:
       dockerfile: Dockerfile
       context: skit-reply
