@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    
+    <form action="changeProfileImage.php" method="post" enctype="multipart/form-data">
+        Select image to upload:
+        <input type="file" name="fileToUpload" id="fileToUpload">
+        <input type="submit" value="Upload Profile Picture" name="submit">
+    </form>
+    <form action="changeDisplayName.php" method="post" enctype="multipart/form-data">
+        Change your name:
+        <input type="text" name="displayName" value="Name" id="displayName">
+        <br>
+        <input type="text" name="email" value="email" id="email">
+        <input type="submit" value="Change Name" name="submit">
+    </form>
+
+</body>
+</html>
