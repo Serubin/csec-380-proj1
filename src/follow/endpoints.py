@@ -17,44 +17,42 @@ app.config.update(
 mysql = MySQL(app)
 
 
-cur = mysql.connection.cursor()
-cur.execute('''create database users;''')
-
-
 @app.route('/')
 def index():
 	return 'You shouldn\'t be here' 
 
 @app.route('/UserSearch')
-def userSearch(search):
+def userSearch():
+    value = app.Request().headers
     cur = mysql.connection.cursor
-    cur.execute('''SELECT id, username FROM accounts.users WHERE username LIKE %%%s%%;''', (search))
+    cur.execute('''SELECT id, username FROM accounts.users WHERE username LIKE %%%s%%;''', (value.search))
     users = JSON.loads(cur.fetchall())
 	return users
 
 @app.route('/FollowUser')
-def followUser(user):
+def followUser():
     value = app.Request().headers
     r = requests.post('/api/v1/IsAuthenticated',value.Auth)
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
-        cur.execute('''INSERT into follows VALUES (%d,%d)''',r.user_id,user)
+        cur.execute('''INSERT into follows VALUES (%d,%d)''',r.user_id,value.user)
         return 'Done' 
     else:
         return 'Not Authenticated'
 
 @app.route('/UnfollowUser')
-def unfollowUser(user):
+def unfollowUser():
+    value = app.Request().headers
     r = requests.post('/api/v1/IsAuthenticated',value.Auth)
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
-        cur.execute('''DELETE from follows WHERE followerid = %d AND followingid = %d''',r.user_id,user)
+        cur.execute('''DELETE from follows WHERE followerid = %d AND followingid = %d''',r.user_id,value.user)
         return 'Done' 
     else:
         return 'Not Authenticated'
 
 
-#if __name__ == "__main__":
-#	app.run(debug=True)
+if __name__ == "__main__":
+	app.run()
