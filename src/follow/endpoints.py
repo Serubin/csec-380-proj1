@@ -17,7 +17,7 @@ def index():
 def userSearch(search):
 	rNames = []
 	for x in names:
-		if x == search:
+		if x in search:
 			rNames.append(x)
 	return rNames
 
@@ -30,7 +30,7 @@ def followUser(user):
 	return 'Follow User' 
 
 @app.route('/UnfollowUser')
-def unfollowUser():
+def unfollowUser(user):
 	cur = mysql.connection.cursor()
 	cur.execute('''use users;''')
     	cur.execute('''DELETE from'''+ this +''' where followers''' +user +''';''')
