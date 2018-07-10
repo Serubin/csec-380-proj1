@@ -1,5 +1,8 @@
 from flask import Flask
 from flask_mysqldb import MySQL
+import requests
+import json
+
 
 app = Flask(__name__)
 
@@ -13,7 +16,7 @@ app.config.update(
 
 mysql = MySQL(app)
 
-names = ["test1","test2"]
+
 cur = mysql.connection.cursor()
 cur.execute('''create database users;''')
 
@@ -24,27 +27,34 @@ def index():
 
 @app.route('/UserSearch')
 def userSearch(search):
-	rNames = []
-	for x in names:
-		if x in search:
-			rNames.append(x)
-	return rNames
+    cur = mysql.connection.cursor
+    cur.execute('''SELECT id, username FROM accounts.users WHERE username LIKE %%%s%%;''', (search))
+    users = JSON.loads(cur.fetchall())
+	return users
 
 @app.route('/FollowUser')
 def followUser(user):
-	cur = mysql.connection.cursor()
-	cur.execute('''use users;''')
-    	cur.execute('''alter table '''+ this +''' add column ''' +user+ ''' varchar (20);''')
-	rv = cur.fetchall()
-	return 'Follow User' 
+    value = app.Request().headers
+    r = requests.post('/api/v1/IsAuthenticated',value.Auth)
+    r.json()
+    if r.authenticated:
+        cur = mysql.connection.cursor()
+        cur.execute('''INSERT into follows VALUES (%d,%d)''',r.user_id,user)
+        return 'Done' 
+    else:
+        return 'Not Authenticated'
 
 @app.route('/UnfollowUser')
 def unfollowUser(user):
-	cur = mysql.connection.cursor()
-	cur.execute('''use users;''')
-    	cur.execute('''DELETE from'''+ this +''' where followers''' +user +''';''')
-	rv = cur.fetchall()
-	return 'Unfollow User' 
+    r = requests.post('/api/v1/IsAuthenticated',value.Auth)
+    r.json()
+    if r.authenticated:
+        cur = mysql.connection.cursor()
+        cur.execute('''DELETE from follows WHERE followerid = %d AND followingid = %d''',r.user_id,user)
+        return 'Done' 
+    else:
+        return 'Not Authenticated'
 
-if __name__ == "__main__":
-	app.run(debug=True)
+
+#if __name__ == "__main__":
+#	app.run(debug=True)
