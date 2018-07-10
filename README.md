@@ -14,10 +14,13 @@ You'll find the following components in `src/`:
 ## Running The Service Cluster
 Skitter is built on top of docker and docker-compose. Thus running the system is as simple as `docker-compose build` followed by `docker-compose up`. This will bring up all the necessary services to create the full skitter experience. Individual services can be brought up by using `docker-compose up <service-name>`. __NOTE: This will not start service dependencies.__
 
-see [src/db/mariadb/schema.sql](src/db/mariadb/schema.sql) for table definition.
+To create the necessary networks run `src/create-networks.sh`
+
 
 ## Data Services
 Skitter uses ElasticSearch, LogStash, And Kibana for storing Skits and Skit replies as well as Mariadb for all other data. All Data Associated to these services are stored in `db/`. By default our system will mount a local directory for data persistence.
+
+see [src/db/mariadb/schema.sql](src/db/mariadb/schema.sql) for table definition.
 
 ## API Endpoints
 * `/` - Static Site Location
