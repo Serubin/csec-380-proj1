@@ -9,6 +9,8 @@ networks:
     external: true # Temporaryily external
   authnet:
     external: true # Temporaryily external
+  sitenet:
+    external: true # Temporaryily external
   usernet:
     external: true
 
@@ -43,6 +45,9 @@ services:
       context: auth/
     ports:
       - 4000:4000
+    depends_on:
+      - "mariadb"
+      - "elk"
     networks:
       - datanet
       - authnet
@@ -53,6 +58,9 @@ services:
       context: skits/
     ports:
        - 7000:7000
+    depends_on:
+      - "mariadb"
+      - "elk"
     networks:
       - skitnet
       - datanet
@@ -63,9 +71,28 @@ services:
       context: skit-reply
     ports:
        - 9000:9000
+    depends_on:
+      - "mariadb"
+      - "elk"
     networks:
       - replynet
       - datanet
+  site_01:
+    image: nginx:alpine
+    volumes:
+        - ./site/dist:/usr/share/nginx/html
+    ports:
+      - 6001:80
+    networks:
+      - sitenet
+  site_02:
+    image: nginx:alpine
+    volumes:
+        - ./site/dist:/usr/share/nginx/html
+    ports:
+      - 6002:80
+    networks:
+      - sitenet
   frontloader:
     image: skitter/front-loader:0.0.1
     build:
@@ -75,8 +102,14 @@ services:
         - ./site/dist:/usr/share/nginx/html
     ports:
       - 80:80
+    depends_on:
+      - "site_01"
+      - "site_02"
+      - "skit-reply"
+      - "skits"
     networks:
       - usernet
       - authnet
       - skitnet
+      - sitenet
 
