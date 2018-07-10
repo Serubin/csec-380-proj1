@@ -28,8 +28,6 @@ RUN bundle install
 # Copy the Rails application into place
 COPY . .
 
-RUN ls .
-
 EXPOSE 9000
 
 # Define the script we want run once the container boots

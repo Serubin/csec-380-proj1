@@ -9,8 +9,8 @@ networks:
     external: true # Temporaryily external
   authnet:
     external: true # Temporaryily external
-  sitenet:
-    external: true # Temporaryily external
+  usernet:
+    external: true
 
 services:
   mariadb:
@@ -46,14 +46,6 @@ services:
     networks:
       - datanet
       - authnet
-  site:
-    image: nginx
-    volumes:
-        - ./site:/usr/share/nginx/html
-    ports:
-     - "6001:80"
-    networks:
-      - sitenet
   skits:
     image: skitter/skits:0.0.1
     build:
@@ -74,3 +66,17 @@ services:
     networks:
       - replynet
       - datanet
+  frontloader:
+    image: skitter/front-loader:0.0.1
+    build:
+      dockerfile: front-loader/Dockerfile
+      context: .
+    volumes:
+        - ./site/dist:/usr/share/nginx/html
+    ports:
+      - 80:80
+    networks:
+      - usernet
+      - authnet
+      - skitnet
+
