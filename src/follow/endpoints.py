@@ -2,6 +2,15 @@ from flask import Flask
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
+
+app.config.update(
+    MYSQL_HOST='mariadb',
+    MYSQL_PORT=3306,
+    MYSQL_DB='accounts',
+    MYSQL_USER='root',
+    MYSQL_PASSWORD='default'
+)
+
 mysql = MySQL(app)
 
 names = ["test1","test2"]
