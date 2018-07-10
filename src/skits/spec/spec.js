@@ -1,7 +1,7 @@
 var request = require('supertest');
 
 describe('loading express', function () {
-    const serverFunc = require('../index');
+    const serverFunc = require('../server');
     let server = serverFunc(true);
 
     it('responds to /', function testSlash(done) {
