@@ -4,3 +4,4 @@ CREATE TABLE IF NOT EXISTS `accounts`.`users` ( `id` INT(5) NOT NULL AUTO_INCREM
 
 CREATE TABLE IF NOT EXISTS `accounts`.`sessions` ( `id` INT(5) NOT NULL AUTO_INCREMENT , `user_id` INT(5) NOT NULL , `session_id` VARCHAR(512) NOT NULL , `expiration` TIMESTAMP NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `accounts`.`follows` ( `followerid` INT(5) NOT NULL , `followingid` INT(5) NOT NULL, PRIMARY KEY (`followerid`, followingid)) ENGINE = InnoDB;
