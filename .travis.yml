@@ -1,12 +1,11 @@
 matrix:
   include:
-    - lanuage: python
+    - language: python
       python:
         - "2.7"
-        - "3.6"
 
       script:
-        - echo "Python!"
+        - echo "Python!" && false
     - language: java
       addons:
         apt:
@@ -14,14 +13,14 @@ matrix:
             - oracle-java9-installer
       jdk: oraclejdk9
       script:
-        - echo "Java!"
+        - echo "Java!" && false
 
 
     - language: ruby
       rvm:
-       - 2.5
+       - 2.3
       script:
-        - echo "Ruby!"
+        - echo "Ruby!" && false
 
     - language: node_js
       node_js:
@@ -31,9 +30,10 @@ matrix:
 
     - language: php
       php:
-        - '7.0'
+        - '5.7'
       script:
-        - echo "Php!"
+        - echo "Php!" && false
+
     - language: verification
       script:
         - test -d docs
