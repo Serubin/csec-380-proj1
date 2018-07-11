@@ -13,6 +13,8 @@ networks:
     external: true # Temporaryily external
   usernet:
     external: true
+  follownet:
+    external: true
 
 services:
   mariadb:
