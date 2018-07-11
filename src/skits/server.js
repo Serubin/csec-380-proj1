@@ -63,10 +63,31 @@ function server (testing) {
     * Get's all skits
     */
     app.get('/getskits', (req, res) => {
+        let body = {};
+
+        if(req.query.user) {
+            let users = [];
+
+            if(!(req.query.user.constructor === Array))
+                users = [ req.query.user ];
+            else
+                users = req.query.user;
+
+            body = {
+                body: {
+                    query: {
+                        terms: {
+                            user: users
+                        }
+                    }
+                }
+            };
+        }
 
         els.search({
             index: INDEX,
-            type: TYPE
+            type: TYPE,
+            ... body
         }).then((resp) => {
             const hits = [];
 
@@ -83,6 +104,7 @@ function server (testing) {
     * @param skit - skit content (max char 140)
     */
     app.post('/addskit', (req, res) => {
+        let user = null;
 
         if(!req.body.skit)
             return res.status(400).send({ error: "missing parameter: skit"});
