@@ -34,6 +34,8 @@ services:
     image: sebp/elk
     container_name: elasticsearch
     restart: always
+    volumes:
+        - "./db/elk/data:/var/lib/elasticsearch"
     ports:
       - "5601:5601"
       - "9200:9200"
