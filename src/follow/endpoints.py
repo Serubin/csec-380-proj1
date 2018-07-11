@@ -25,16 +25,16 @@ def index():
 @app.route('/UserSearch',methods=['POST'])
 def userSearch():
     value = request.args.get('search')
-    cur = mysql.connection.cursor
-    cur.execute('''SELECT id, username FROM accounts.users WHERE username LIKE %%%s%%;''', (value))
-    users = JSON.loads(cur.fetchall())
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT id, username FROM accounts.users WHERE username LIKE '%%%s%%';''', (value))
+    users = json.dumps(cur.fetchall())
     return users
 
 @app.route('/FollowUser',methods=['POST'])
 def followUser():
     auth = request.headers
     user = request.args.get('userId')
-    r = requests.post('/api/v1/IsAuthenticated',header = {'Authorization' : auth['Authentication']})
+    r = requests.post('/api/v1/IsAuthenticated', {'id' : auth['Authorization']})
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
@@ -47,7 +47,7 @@ def followUser():
 def unfollowUser():
     auth = request.headers
     user = request.args.get('userId')
-    r = requests.post('/api/v1/IsAuthenticated',header = {'Authorization' : auth['Authentication']})
+    r = requests.post('/api/v1/IsAuthenticated', {'id' : auth['Authorization']})
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
