@@ -8,3 +8,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY endpoints.py endpoints.py
 
 CMD [ "python", "./endpoints.py" ]
+
+EXPOSE 8000
