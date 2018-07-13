@@ -13,7 +13,7 @@ matrix:
       script:
         - "pylint"
         - find . -name \*.py -exec pep8 --ignore=E402 {} +
-        - python src/follow/tests.py
+        #- python src/follow/tests.py
     - language: java
       addons:
         apt:
