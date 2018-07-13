@@ -28,7 +28,8 @@ def userSearch():
     value = request.args.get('search')
     cur = mysql.connection.cursor()
     cur.execute(
-        '''SELECT id, username FROM accounts.users WHERE username LIKE '%%%s%%';''',
+        '''SELECT id, username FROM accounts.users WHERE
+        username LIKE '%%%s%%';''',
         (value)
     )
     users = json.dumps(cur.fetchall())
@@ -68,7 +69,8 @@ def unfollowUser():
     if r.authenticated:
         cur = mysql.connection.cursor()
         cur.execute(
-            '''DELETE from follows WHERE followerid = %d AND followingid = %d''',
+            '''DELETE from follows WHERE followerid = %d AND
+            followingid = %d''',
             r.user_id, userId
         )
         return 'Done'
