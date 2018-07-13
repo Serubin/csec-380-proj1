@@ -20,16 +20,12 @@ MY_SQL = MySQL(APP)
 
 
 @APP.route('/')
-
-
 def index():
     """Index (Testing only)"""
     return 'You shouldn\'t be here'
 
 
 @APP.route('/UserSearch', methods=['POST'])
-
-
 def user_search():
     """UserSearch"""
     value = request.args.get('search')
@@ -44,8 +40,6 @@ def user_search():
 
 
 @APP.route('/FollowUser', methods=['POST'])
-
-
 def follow_user():
     """FollowUser"""
     output = ''
@@ -71,8 +65,6 @@ def follow_user():
 
 
 @APP.route('/UnfollowUser', methods=['POST'])
-
-
 def unfollow_user():
     """UnfollowUser"""
     auth = request.headers
