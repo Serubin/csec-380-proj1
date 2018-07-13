@@ -3,9 +3,17 @@ matrix:
     - language: python
       python:
         - "2.7"
-
+        - "3.6"
+      virtualenv:
+        system_site_packages: true
+      before_install:
+        - pip install pep8
+      install:
+        - pip install -r src/follow/requirements.txt
       script:
-        - echo "Python!" && false
+        - "pylint"
+        - find . -name \*.py -exec pep8 --ignore=E402 {} +
+        - python src/follow/tests.py
     - language: java
       addons:
         apt:
