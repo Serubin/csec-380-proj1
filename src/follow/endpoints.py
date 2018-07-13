@@ -18,10 +18,12 @@ APP.config.update(
 
 mysql = MySQL(APP)
 
+
 """Index (Testing only)"""
 @APP.route('/')
 def index():
     return 'You shouldn\'t be here'
+
 
 """UserSearch"""
 @APP.route('/UserSearch', methods=['POST'])
@@ -36,6 +38,7 @@ def user_search():
     users = json.dumps(cur.fetchall())
     return users
 
+
 """FollowUser"""
 @APP.route('/FollowUser', methods=['POST'])
 def follow_user():
@@ -46,8 +49,8 @@ def follow_user():
         '/api/v1/IsAuthenticated',
         {'id': auth['Authorization']}
     )
-    r.json()
-    if r.authenticated:
+    req.json()
+    if req.authenticated:
         cur = mysql.connection.cursor()
         cur.execute(
             '''INSERT into follows VALUES (%d, %d)''',
@@ -57,8 +60,9 @@ def follow_user():
         output = 'Done'
     else:
         output = 'Not Authenticated'
-    
+
     return output
+
 
 """UnfollowUser"""
 @APP.route('/UnfollowUser', methods=['POST'])
@@ -69,8 +73,8 @@ def unfollow_user():
         '/api/v1/IsAuthenticated',
         {'id': auth['Authorization']}
     )
-    r.json()
-    if r.authenticated:
+    req.json()
+    if req.authenticated:
         cur = mysql.connection.cursor()
         cur.execute(
             '''DELETE from follows WHERE followerid = %d AND
@@ -81,7 +85,7 @@ def unfollow_user():
         output = 'Done'
     else:
         output = 'Not Authenticated'
-    
+
     return output
 
 
