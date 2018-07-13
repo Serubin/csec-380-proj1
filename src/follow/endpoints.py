@@ -28,7 +28,7 @@ def userSearch():
     value = request.args.get('search')
     cur = mysql.connection.cursor()
     cur.execute('''SELECT id, username FROM accounts.users
-        WHERE username LIKE '%%%s%%';''', (value))
+                    WHERE username LIKE '%%%s%%';''', (value))
     users = json.dumps(cur.fetchall())
     return users
 
@@ -38,28 +38,28 @@ def followUser():
     auth = request.headers
     user = request.args.get('userId')
     r = requests.post('/api/v1/IsAuthenticated',
-    {'id' : auth['Authorization']})
+        {'id': auth['Authorization']})
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
         cur.execute('''INSERT into follows VALUES (%d, %d)''',
-            r.user_id,user)
+                    r.user_id,user)
         return 'Done'
     else:
         return 'Not Authenticated'
 
-    
+
 @app.route('/UnfollowUser', methods=['POST'])
 def unfollowUser():
     auth = request.headers
     user = request.args.get('userId')
     r = requests.post('/api/v1/IsAuthenticated',
-    {'id' : auth['Authorization']})
+    {'id': auth['Authorization']})
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
         cur.execute('''DELETE from follows WHERE followerid = %d AND
-            followingid = %d''', r.user_id,userId)
+                    followingid = %d''', r.user_id,userId)
         return 'Done'
     else:
         return 'Not Authenticated'
