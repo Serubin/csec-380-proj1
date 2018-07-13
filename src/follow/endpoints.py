@@ -1,4 +1,4 @@
-"""This class makes 4 flask endpoints"""
+#This class makes 4 flask endpoints
 import json
 from flask import Flask
 from flask import request
@@ -20,13 +20,17 @@ MY_SQL = MySQL(APP)
 
 
 @APP.route('/')
-"""Index (Testing only)"""
+#Index (Testing only)
+
+
 def index():
     return 'You shouldn\'t be here'
 
 
 @APP.route('/UserSearch', methods=['POST'])
-"""UserSearch"""
+#UserSearch
+
+
 def user_search():
     value = request.args.get('search')
     cur = MY_SQL.connection.cursor()
@@ -40,7 +44,9 @@ def user_search():
 
 
 @APP.route('/FollowUser', methods=['POST'])
-"""FollowUser"""
+#FollowUser
+
+
 def follow_user():
     output = ''
     auth = request.headers
@@ -65,7 +71,9 @@ def follow_user():
 
 
 @APP.route('/UnfollowUser', methods=['POST'])
-"""UnfollowUser"""
+#UnfollowUser
+
+
 def unfollow_user():
     auth = request.headers
     user = request.args.get('userId')
