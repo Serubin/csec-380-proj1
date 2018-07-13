@@ -8,6 +8,7 @@ matrix:
         system_site_packages: true
       before_install:
         - pip install pep8
+        - pip install pylint
       install:
         - pip install -r src/follow/requirements.txt
       script:
