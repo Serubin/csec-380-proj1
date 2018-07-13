@@ -38,7 +38,7 @@ def followUser():
     auth = request.headers
     user = request.args.get('userId')
     r = requests.post('/api/v1/IsAuthenticated',
-                    {'id': auth['Authorization']})
+                        {'id': auth['Authorization']})
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
@@ -54,7 +54,7 @@ def unfollowUser():
     auth = request.headers
     user = request.args.get('userId')
     r = requests.post('/api/v1/IsAuthenticated',
-                    {'id': auth['Authorization']})
+                        {'id': auth['Authorization']})
     r.json()
     if r.authenticated:
         cur = mysql.connection.cursor()
