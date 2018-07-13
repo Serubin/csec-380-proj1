@@ -1,13 +1,14 @@
+"""This class makes 4 flask endpoints"""
+import json
 from flask import Flask
 from flask import request
 from flask_mysqldb import MySQL
 import requests
-import json
 
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
-app.config.update(
+APP.config.update(
     MYSQL_HOST='mariadb',
     MYSQL_PORT=3306,
     MYSQL_DB='accounts',
@@ -15,16 +16,16 @@ app.config.update(
     MYSQL_PASSWORD='default'
 )
 
-mysql = MySQL(app)
+mysql = MySQL(APP)
 
-
-@app.route('/')
+"""Index (Testing only)"""
+@APP.route('/')
 def index():
     return 'You shouldn\'t be here'
 
-
-@app.route('/UserSearch', methods=['POST'])
-def userSearch():
+"""UserSearch"""
+@APP.route('/UserSearch', methods=['POST'])
+def user_search():
     value = request.args.get('search')
     cur = mysql.connection.cursor()
     cur.execute(
@@ -35,12 +36,13 @@ def userSearch():
     users = json.dumps(cur.fetchall())
     return users
 
-
-@app.route('/FollowUser', methods=['POST'])
-def followUser():
+"""FollowUser"""
+@APP.route('/FollowUser', methods=['POST'])
+def follow_user():
+    output = ''
     auth = request.headers
     user = request.args.get('userId')
-    r = requests.post(
+    req = requests.post(
         '/api/v1/IsAuthenticated',
         {'id': auth['Authorization']}
     )
@@ -49,19 +51,21 @@ def followUser():
         cur = mysql.connection.cursor()
         cur.execute(
             '''INSERT into follows VALUES (%d, %d)''',
-            r.user_id,
+            req.user_id,
             user
         )
-        return 'Done'
+        output = 'Done'
     else:
-        return 'Not Authenticated'
+        output = 'Not Authenticated'
+    
+    return output
 
-
-@app.route('/UnfollowUser', methods=['POST'])
-def unfollowUser():
+"""UnfollowUser"""
+@APP.route('/UnfollowUser', methods=['POST'])
+def unfollow_user():
     auth = request.headers
     user = request.args.get('userId')
-    r = requests.post(
+    req = requests.post(
         '/api/v1/IsAuthenticated',
         {'id': auth['Authorization']}
     )
@@ -71,12 +75,15 @@ def unfollowUser():
         cur.execute(
             '''DELETE from follows WHERE followerid = %d AND
             followingid = %d''',
-            r.user_id, userId
+            req.user_id,
+            user
         )
-        return 'Done'
+        output = 'Done'
     else:
-        return 'Not Authenticated'
+        output = 'Not Authenticated'
+    
+    return output
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='8000')
+    APP.run(host='0.0.0.0', port='8000')
