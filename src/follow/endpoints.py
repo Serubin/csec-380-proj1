@@ -16,20 +16,24 @@ APP.config.update(
     MYSQL_PASSWORD='default'
 )
 
-mysql = MySQL(APP)
+Mysql = MySQL(APP)
 
 
 """Index (Testing only)"""
+
+
 @APP.route('/')
 def index():
     return 'You shouldn\'t be here'
 
 
 """UserSearch"""
+
+
 @APP.route('/UserSearch', methods=['POST'])
 def user_search():
     value = request.args.get('search')
-    cur = mysql.connection.cursor()
+    cur = Mysql.connection.cursor()
     cur.execute(
         '''SELECT id, username FROM accounts.users WHERE
         username LIKE '%%%s%%';''',
@@ -40,6 +44,8 @@ def user_search():
 
 
 """FollowUser"""
+
+
 @APP.route('/FollowUser', methods=['POST'])
 def follow_user():
     output = ''
@@ -51,7 +57,7 @@ def follow_user():
     )
     req.json()
     if req.authenticated:
-        cur = mysql.connection.cursor()
+        cur = Mysql.connection.cursor()
         cur.execute(
             '''INSERT into follows VALUES (%d, %d)''',
             req.user_id,
@@ -65,6 +71,8 @@ def follow_user():
 
 
 """UnfollowUser"""
+
+
 @APP.route('/UnfollowUser', methods=['POST'])
 def unfollow_user():
     auth = request.headers
@@ -75,7 +83,7 @@ def unfollow_user():
     )
     req.json()
     if req.authenticated:
-        cur = mysql.connection.cursor()
+        cur = Mysql.connection.cursor()
         cur.execute(
             '''DELETE from follows WHERE followerid = %d AND
             followingid = %d''',
