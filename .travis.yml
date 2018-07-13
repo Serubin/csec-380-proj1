@@ -12,7 +12,7 @@ matrix:
       install:
         - pip install -r src/follow/requirements.txt
       script:
-        - "pylint"
+        - "pylint src/follow/endpoints.py"
         - find . -name \*.py -exec pep8 --ignore=E402 {} +
         #- python src/follow/tests.py
     - language: java
