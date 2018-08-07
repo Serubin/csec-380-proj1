@@ -19,3 +19,15 @@
 * What testing framework did you choose and why?
   * We decided to forego a single testing framework and use TavisCi as our major framework. Since every language tends to have it’s own specific test frameworks, it makes most sense to utilize them as necessary. Given this, we’ve set up the foundational requirements for all the various testing frameworks that our microservices will require. 
 
+## Activity Four
+
+* How do you prevent password brute force?
+ * Lockout an account after x tries in a short period of time
+* How do you prevent username enumeration?
+ * Restrict Login Attempts by IP as well  to a fixed per-minute cap
+ * “incorrect username or password”
+* What happens if your sessionID is predictable, how do you prevent that?
+ * multiple sources + salt + hash
+ * randomization
+* What are the downsides of centralizing authentication
+
